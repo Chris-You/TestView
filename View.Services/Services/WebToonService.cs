@@ -32,13 +32,9 @@ namespace View.Services
 
     }
 
-        public class WebToonService : IWebToonService
+    public class WebToonService : IWebToonService
     {
-
         private readonly IConfiguration _configuration;
-        //private readonly IWebHostEnvironment _hostingEnvironment;
-        
-        //private readonly Redis _redis;
         private readonly MongoDb _mongoDB;
 
         public WebToonService(IConfiguration configuration)
@@ -52,6 +48,8 @@ namespace View.Services
                             _configuration.GetSection("MONGODB:TOON_DB").Value.ToString());
 
         }
+
+
         public ContentsList Crawling(int titleId, int no, string week, string status = "Y")
         {
             var html = "https://comic.naver.com/webtoon/detail?titleId=" + titleId + "&no=" + no;
@@ -60,36 +58,28 @@ namespace View.Services
             var htmlDoc = web.Load(html);
 
             var node = htmlDoc.DocumentNode.SelectSingleNode("//head/title");
-
             var body = htmlDoc.DocumentNode.SelectSingleNode("//body/div");
 
-            var container = body.SelectNodes("//div").Where(w => w.Id == "container").First();
-
-            //var content = container.SelectSingleNode("//div");
+            var contentNode = body.SelectNodes("//div").Where(w => w.Id == "content").First();
+            var sectionContWide = body.SelectNodes("//div").Where(w => w.Id == "sectionContWide").First();
 
             var doc = new HtmlDocument();
-            doc.LoadHtml(container.InnerHtml);
-
-            var doc2 = new HtmlDocument();
-            var node2 = doc.DocumentNode.SelectNodes("//div/div").Where(w => w.Id == "sectionContWide").First();
-            doc2.LoadHtml(node2.InnerHtml);
+            doc.LoadHtml(sectionContWide.InnerHtml);
 
             // 썸네일 영역
-            var thumb = doc2.DocumentNode.SelectNodes("//div/div")[0];
-            var img = thumb.SelectSingleNode("//a/img");
-            var src = img.Attributes["src"].Value;
+            var thumb = doc.DocumentNode.SelectNodes("//div/div").Where(w=> w.Attributes["class"].Value == "thumb").First();
+            var src = thumb.SelectSingleNode("//a/img").Attributes["src"].Value;
 
-            var detail = doc2.DocumentNode.SelectNodes("//div/div")[1];
-            var title = thumb.SelectNodes("//h2/span")[0].InnerText;
-            var artist = thumb.SelectNodes("//h2/span")[1].InnerText;
-            var txt = thumb.SelectNodes("//p").Where(w => w.Attributes["class"].Value == "txt").First().InnerText;
-            var genre = thumb.SelectNodes("//p/span")[0].InnerText;
-            var age = thumb.SelectNodes("//p/span")[1].InnerText;
-            //var age2 = age.SelectSingleNode("//span")[0];
-
+            // 상서젱보 영역
+            var detail = doc.DocumentNode.SelectNodes("//div/div").Where(w => w.Attributes["class"].Value == "detail").First();
+            var title = detail.SelectNodes("//h2/span").Where(w => w.Attributes["class"].Value == "title").First().InnerText;
+            var artist = detail.SelectNodes("//h2/span").Where(w => w.Attributes["class"].Value == "wrt_nm").First().InnerText;
+            var txt = detail.SelectNodes("//p").Where(w => w.Attributes["class"].Value == "txt").First().InnerText;
+            var genre = detail.SelectNodes("//p/span").Where(w => w.Attributes["class"].Value == "genre").First().InnerText;
+            var age = detail.SelectNodes("//p/span").Where(w => w.Attributes["class"].Value == "age").First().InnerText;
 
             // 회차정보
-            var listNo = doc2.DocumentNode.SelectNodes("//div/div")[1];
+            var listNo = doc.DocumentNode.SelectNodes("//div").Where(w => w.Attributes["class"].Value == "tit_area").First();
             var noName = listNo.SelectSingleNode("//div/h3").InnerText;
             var star = listNo.SelectNodes("//div/dl/dd/div/span").Where(w => w.Id == "topPointTotalNumber").First().InnerText;
             var regDt = listNo.SelectNodes("//div").Where(w => w.Attributes["class"].Value == "vote_lst").First()
@@ -97,20 +87,17 @@ namespace View.Services
                               .SelectNodes("dd").First().InnerText;
 
             // 웹툰 컨텐츠
-
             var view = doc.DocumentNode.SelectNodes("//div").Where(w => w.Id == "comic_view_area").First();
-
             var doc3 = new HtmlDocument();
             doc3.LoadHtml(view.InnerHtml);
             var content = doc3.DocumentNode.SelectNodes("//div")[0].InnerHtml;
 
-
             // 작가의말
-            var doc4 = new HtmlDocument();
-            var node3 = node2.NextSibling.NextSibling;
-            doc4.LoadHtml(node3.InnerHtml);
-            var artistNm = doc4.DocumentNode.SelectNodes("//div/div/h4/em/strong").First().InnerText;
-            var comment = doc4.DocumentNode.SelectNodes("//div/div/p").First().InnerHtml;
+            var doc2 = new HtmlDocument();
+            var contnextnode = doc.DocumentNode;
+            doc2.LoadHtml(contentNode.InnerHtml);
+            var artistNm = doc2.DocumentNode.SelectNodes("//div/div/h4/em/strong").First().InnerText;
+            var comment = doc2.DocumentNode.SelectNodes("//div/div/p").First().InnerHtml;
 
 
             var webtoon = new Contents();
