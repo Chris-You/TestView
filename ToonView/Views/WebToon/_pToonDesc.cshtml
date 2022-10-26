@@ -1,0 +1,18 @@
+﻿@model View.Common.Models.Webtoon.Contents;
+@{
+}
+
+
+	<div class="media">
+	  <div class="media-left">
+		<a href="#">
+		  <img class="media-object" src="@Model.thumImg" alt="@Model.titleName" style="width:125px;">
+		</a>
+	  </div>
+	  <div class="media-body">
+		<h4 class="media-heading"><b>@Model.titleName</b> </h4>
+		 <p style="margin-bottom:4px;font-size:12px;">@Model.artist</p>
+		 <p style="margin-bottom:4px;font-size:12px;">@Model.desc</p>
+		 <p style="margin-bottom:4px;font-size:12px;">@Model.genre | @Model.age</p>
+	  </div>
+	</div>

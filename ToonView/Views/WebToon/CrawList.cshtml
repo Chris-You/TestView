@@ -1,0 +1,113 @@
+﻿@model List<View.Common.Models.Webtoon.Contents>;
+@{
+	
+}
+
+<script type="text/javascript">
+
+
+	$(function () {
+
+		//getToon();
+
+		getList();	
+	})
+
+	
+
+	function getcraw()
+	{
+		var idx = $("#titleId option").index($('#titleId option:selected'));
+		var week = $('#titleId option:eq(' + idx + ')').attr('data-week');
+
+		var lastIdx = Number($("#Idxlist option").last().val()) + 1;
+		
+		$.ajax({
+			type: "post",
+			url: "/webtoon/Crawling",
+			data: "id="+ $("#titleId").val() + "&no="+ lastIdx + "&week="+ week , 
+			success: function (data) {
+				console.log(data);
+
+				$("#webtoon_desc").html(data.titleId);
+
+				getList();
+			}
+		});
+		
+
+		
+	}
+
+
+	function getToon()
+	{
+		$.ajax({
+			type: "post",
+			url: "/webtoon/Crawlist/" + $("#titleId").val(),
+			data: "", 
+			success: function (data) {
+				console.log(data);
+				var listOpt = "";
+				if (data != null && data.length > 0) {
+					
+					
+				}
+
+				
+				//$("#Idxlist").html(listOpt);
+			}
+		});
+	}
+
+
+
+	function getList()
+	{
+		$.ajax({
+			type: "post",
+			url: "/webtoon/ItemList/" + $("#titleId").val(),
+			data: "", 
+			success: function (data) {
+				console.log(data);
+				var listOpt = "";
+				if (data != null && data.length > 0) {
+					
+					for (var i = 0; i < data.length; i++) {
+						listOpt += '<option value="'+ data[i].no + '">' + data[i].name + '</option>'
+					}
+				}
+
+
+				$("#Idxlist").html(listOpt);
+			}
+		});
+	}
+
+</script>
+
+
+<select id="titleId" onchange="javascript:getList();" class="form-control">
+	@foreach(var toon in Model)
+	{
+		<option value="@toon.titleId" data-week="@toon.week">@toon.titleName</option>
+	}
+
+</select>
+
+
+<select id="Idxlist" class="form-control">
+
+</select>
+
+<button type="button" class="btn btn-primary" onclick="javascript:getcraw();">크롤링</button>
+
+
+<hr />
+
+
+
+<div id="webtoon_desc" >
+  
+</div>
+

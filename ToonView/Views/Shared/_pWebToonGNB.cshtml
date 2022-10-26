@@ -1,0 +1,190 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+	var controller = Context.Request.RouteValues["Controller"].ToString();
+	var action = Context.Request.RouteValues["Action"].ToString();
+
+	var week = ViewBag.Week;
+	var genre = ViewBag.Genre;
+	var finish = ViewBag.Finish;
+
+	if(week == null)
+	{
+		//week = (int)DateTime.Now.DayOfWeek;
+	}
+
+}
+
+
+<style>
+	.flex_container {
+		display: flex;
+		justify-content: left;
+		margin-bottom: 10px;
+		flex-wrap: wrap;
+        cursor:pointer;
+	}
+	.gnb_box {
+		width: 80px;
+		border-right: 1px solid black;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	.lnb_box {
+		width: 60px;
+		/* border-right: 1px solid black; */
+		text-align: center;
+		/*margin-left:3px; */
+		font-size: 13px;
+		cursor: pointer;
+	}
+
+	.gnb_box.on {
+		border-bottom: 1px solid #0094ff;
+	}
+
+
+	.lnb_box.on {
+		border-bottom: 1px solid #0094ff;
+	}
+
+		
+
+</style>
+
+<script type="text/javascript">
+
+    
+	$(function () {
+		
+		$("#lnb").show()
+
+		if ("@week" != "") {
+
+			setLNB('w');
+
+			$(".gnb_box").each(function (i, item) {
+				$(this).removeClass("on");
+				if (i == 0) $(this).addClass("on");
+			});
+
+			$(".lnb_box").each(function (i, item) {
+				$(this).removeClass("on");
+				if (i == "@week") $(this).addClass("on");
+			});
+		}
+		else if ("@genre" != "") {
+
+			setLNB('g');
+
+			$(".gnb_box").each(function (i, item) {
+				$(this).removeClass("on");
+				if (i == 1) $(this).addClass("on");
+			});
+
+			$(".lnb_box").each(function (i, item) {
+				$(this).removeClass("on");
+				if ($(this).text() == "@genre") $(this).addClass("on");
+			});
+
+		}
+		else if ("@finish" != "") {
+			setLNB('f');
+
+			$(".gnb_box").each(function (i, item) {
+				$(this).removeClass("on");
+				if (i == 2) $(this).addClass("on");
+			});
+
+
+			$("#lnbarea").hide()
+		}
+	});
+
+
+	function goList(val, mode) {
+		if (mode == 'w') {
+			setLNB("w");
+
+			location.href = "/webtoon/week?week=" + val;
+		}
+
+		else if (mode == 'g') {
+			setLNB('g');
+
+			var genre = "";
+			$(".lnb_box").each(function (i, item) {
+				if (i == val) {
+					genre = $(this).text();
+				}
+			});
+
+			location.href = "/webtoon/genre?genre=" + genre;
+		}
+		else if (mode == 'f') {
+
+			setLNB('f');
+
+			location.href = "/webtoon/finish";
+		}
+	}
+	
+
+    function setLNB(val) {
+
+		
+        var lnb = "";
+        if (val == 'w') {
+            //lnb += '<div class="lnb_box">요일전체</div>';
+			lnb += '<div class="lnb_box" onclick="javascript:goList(0,\'w\');" style="color:red;">일요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(1,\'w\');">월요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(2,\'w\');">화요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(3,\'w\');">수요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(4,\'w\');">목요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(5,\'w\');">금요일</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(6,\'w\');" style="color:blue;">토요일</div>';
+        }
+        else if (val == 'g'){
+            lnb += '<div class="lnb_box" onclick="javascript:goList(0,\'g\',);">에피소드</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(1,\'g\');">옴니버스</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(2,\'g\');">스토리</div> | ';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(3,\'g\');">일상</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(4,\'g\');">개그</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(5,\'g\');">판타지</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(6,\'g\');">액션</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(7,\'g\');">드라마</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(8,\'g\');">순정</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(9,\'g\');">감성</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(10,\'g\');">스릴러</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(11,\'g\');">무협/사극</div>';
+            lnb += '<div class="lnb_box" onclick="javascript:goList(12,\'g\');">스포츠</div>';
+
+		}
+
+        $("#lnb").html(lnb);
+		//$("#lnb").show();
+
+		
+
+    }
+
+
+
+
+</script>
+
+<div id="gnb" class="flex_container">
+    <div class="gnb_box" onclick="javascript:goList('','w');">요일별</div>
+    <div class="gnb_box" onclick="javascript:goList('','g');">장르별</div>
+    <div class="gnb_box" onclick="javascript:goList('','f');">완결웹툰</div>
+</div>
+
+<div id="lnbarea" style="margin-bottom:10px;">
+	<hr />
+
+	<div id="lnb" class="flex_container" style=""></div>
+</div>
+

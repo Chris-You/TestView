@@ -1,0 +1,51 @@
+﻿@model View.Common.Models.Webtoon.Contents;
+@{
+
+	var week = ViewBag.Week;
+	var genre = ViewBag.Genre;
+	var finish = ViewBag.Finish;
+}
+
+<script type="text/javascript">
+
+
+	$(function () {
+		
+	});
+
+
+</script>
+
+<hr />
+
+<div style="background-color:;">
+
+@{
+    await Html.RenderPartialAsync("_pToonDesc", Model);
+}	
+
+</div>
+
+
+
+<div style="margin-top:15px;">
+
+	<table class="table table-hover">
+  		<tr>
+			  <td><b>제목</b></td>
+			  <td style="width:80px;"><b>별점</b></td>
+			  <td style="width:100px;"><b>등록일</b></td>
+		</tr>
+
+	@foreach(var i in Model.list)
+	{
+		<tr>
+			<td><a href="/webtoon/show/@i.titleId?no=@i.no&week=@week&genre=@genre&finish=@finish">@i.name</a></td>
+			<td>@i.star</td>
+			<td >@i.regDate.ToString("yyyy.MM.dd")</td>
+
+		</tr>
+	}
+
+	</table>
+</div>

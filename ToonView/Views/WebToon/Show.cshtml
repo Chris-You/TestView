@@ -1,0 +1,42 @@
+﻿@model View.Common.Models.Webtoon.Contents;
+@{
+	var data = Model.list.First();
+
+    
+}
+
+<script type="text/javascript">
+
+ jQuery.noConflict()
+    function loadImageEvent(element){
+        if ( element ) {
+            if( element.width && element.width > 450 ) {
+                element.width = 450;
+            }
+        }
+    }
+    window.__state__ = {
+        staticDomain: ''
+    }
+</script>
+
+
+<div style="background-color:;">
+
+@{
+    await Html.RenderPartialAsync("_pToonDesc", Model);
+}	
+
+</div>
+
+<div style="margin-bottom:20px;">
+    <div style="background-color:cornflowerblue;padding:4px 7px 2px 4px;"><b> @data.name</b></div>
+    <div style=""> @data.star</div>
+    <div style=""> @data.regDate.ToString("yyyy.MM.dd")</div>
+    <div style="text-align:center;">
+        @Html.Raw(data.content)
+    </div>
+
+    <div style="margin-top:9px;"><b> 작가의 말</b> <span style="font-size:12px;">(@Model.artist)</span></div>
+    <div style="margin:5px 0 35px 0;">@Html.Raw(data.comment) </div>
+</div>

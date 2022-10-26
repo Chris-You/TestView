@@ -1,0 +1,104 @@
+﻿@using View.Common.Utils;
+@{
+	var week = ViewBag.Week;
+
+	string weekName = Helper.GetWeek(Convert.ToString(week));
+
+}
+
+<script type="text/javascript">
+
+
+	$(function () {
+
+		getToonList('@week', 'w');
+
+	});
+	
+
+	function getToonList(val, mode) {
+
+		//console.log("====");
+		//console.log(val);
+
+		$.ajax({
+			type: "post",
+			url: "/webtoon/ToonList" ,
+			data: "mode="+ mode + "&val=" +val, 
+			success: function (data) {
+				//console.log(data);
+				
+				if (data != null && data.length > 0) {
+
+					var html = '<table class="table table-hover">';
+  		
+
+					for (var i = 0; i < data.length; i++) {
+						//listOpt += '<option value="'+ data[i].no + '">' + data[i].name + '</option>'
+						html += '<tr onclick="javascript:goDetail('+ data[i].titleId +');">';
+
+						html += '<td style="width:100px;"><img src="'+ data[i].thumImg +'" alt="" style="height:70px;"/></td>';
+						html += '<td><b>' + data[i].titleName + '</b>&nbsp;&nbsp;&nbsp;<span style="font-size:12px;">' + data[i].artist + '</span><br>' + data[i].star + '<br>' + data[i].lastUpdDate + '</td>';
+						html += '<td></td>';
+
+						html += '</tr>';
+
+					}
+
+					html += '</table>';
+				}
+
+				$("#weekList").html(html);
+				
+			}
+		});
+
+	}
+
+
+	function goDetail(id) {
+		location.href = "/webtoon/toon/" + id + "?&week=@week";
+	}
+
+
+
+
+</script>
+
+<hr />
+<div>
+	<div>
+		<b style="font-size:16px;">@weekName.Substring(0,2) 추천웹툰</b> <span style="font-size:10px;">Today:@DateTime.Now.ToString("yyyy.MM.dd")</span>
+	</div>
+
+	<div style="height:90px;background-color:#ccc;text-align:center;margin-top:5px;">
+		추천웹툰 영역
+	</div>
+
+
+</div>
+<div style="margin-top: 8px;">
+	<div sstyle="margin-bottom:15px;">
+		<b style="font-size:16px;">@weekName.Substring(0,2) 전체 웹툰</b> 
+	</div>
+	
+	<div id="weekList"></div>
+
+</div>
+
+
+
+<!--
+<div id="webtoon_desc" class="media">
+  <div class="media-left media-middle">
+    <a href="#">
+      <img class="media-object" src="..." alt="...">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">Middle aligned media</h4>
+    ...
+  </div>
+</div>
+
+	-->

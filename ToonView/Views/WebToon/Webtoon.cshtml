@@ -1,0 +1,10 @@
+﻿@using View.Common.Models.Webtoon;
+@{
+	ContentsList item = ViewBag.Item;
+}
+
+@Html.Raw(item.content);
+
+
+<br />
+@Html.Raw(item.comment);

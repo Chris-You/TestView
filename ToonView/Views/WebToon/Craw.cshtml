@@ -1,0 +1,89 @@
+﻿@{
+}
+
+
+<script type="text/javascript">
+
+
+	function getcraw()
+	{
+		$.ajax({
+			type: "post",
+			url: "webtoon/Crawling",
+			data: "id="+ $("#id").val() + "&no="+ $("#no").val() + "&week="+ $("#week").val() + "&status="+ $("#status").val() , 
+			success: function (data) {
+				console.log(data);
+			}
+		});
+	}
+
+</script>
+
+
+
+<div class="page-header">
+  <h3>크롤링 <br /> 
+	<small>작품 등록 1회차 sample</small></h3>
+</div>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">웹툰 ID</label>
+    <div class="col-sm-10">
+		<!--
+      <select name="id" id="id" class="form-control">
+			<option value="758037">참교육</option>
+		    <option value="783052">퀘스트지상주의</option>
+			<option value="602910">윈드브레이커 </option>
+
+			<option value="783053">김부장</option>
+			<option value="747269">전지적 독자 시점 </option>
+	   </select>
+		-->
+		<input type="number" name="id" id="id" class="form-control" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">번호(회차)</label>
+    <div class="col-sm-10">
+      <input type="number" name="no" id="no" class="form-control" value="1"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">요일</label>
+    <div class="col-sm-10">
+		<select name="week" id="week" class="form-control">
+			<option value="0">일요일</option>
+			<option value="1">월요일</option>
+			<option value="2">화요일</option>
+			<option value="3">수요일</option>
+			<option value="4">목요일</option>
+			<option value="5">금요일</option>
+			<option value="6">토요일</option>
+		</select>
+    </div>
+  </div>
+
+<div class="form-group">
+    <label for="inputPassword3" class="col-sm-2 control-label">상태</label>
+    <div class="col-sm-10">
+		<select name="status" id="status" class="form-control">
+			
+			<option value="Y">연재중</option>
+			<option value="N">완결</option>
+			<option value="R">휴재중</option>
+		</select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+		<button type="button" class="btn btn-primary" onclick="javascript:getcraw();">작품 등록</button>
+
+		<button type="button" class="btn btn-default" onclick="location.href='/webtoon/crawlist';">리스트</button>
+    </div>
+  </div>
+</form>
+
+
+
