@@ -2,7 +2,6 @@
 @{
 
 	var week = ViewBag.Week;
-	var genre = ViewBag.Genre;
 	var finish = ViewBag.Finish;
 }
 
@@ -10,13 +9,25 @@
 
 
 	$(function () {
-		
+
+		$(".lnb_box").each(function (i, item) {
+			$(this).removeClass("on");
+			if ($(this).attr("data-week") == "@week") $(this).addClass("on");
+		});
+
 	});
 
 
 </script>
 
-<hr />
+@if (string.IsNullOrEmpty(finish))
+{
+	<partial name="_pLNBWeek" />
+}
+else
+{
+	<div style="height:20px;"></div>
+}
 
 <div style="background-color:;">
 
@@ -40,7 +51,7 @@
 	@foreach(var i in Model.list)
 	{
 		<tr>
-			<td><a href="/webtoon/show/@i.titleId?no=@i.no&week=@week&genre=@genre&finish=@finish">@i.name</a></td>
+			<td><a href="/webtoon/show/@i.titleId?no=@i.no">@i.name</a></td>
 			<td>@i.star</td>
 			<td >@i.regDate.ToString("yyyy.MM.dd")</td>
 

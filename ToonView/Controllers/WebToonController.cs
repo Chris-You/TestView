@@ -35,7 +35,7 @@ namespace MapView.Controllers
             
         }
 
-
+        #region 크롤링
 
         public IActionResult Craw()
         {
@@ -73,6 +73,7 @@ namespace MapView.Controllers
             return new JsonResult(list);
         }
 
+        #endregion
 
 
         public IActionResult Index()
@@ -120,7 +121,7 @@ namespace MapView.Controllers
         }
 
 
-        public IActionResult Toon(int id, string? week, string? genre, string? finish)
+        public IActionResult Toon(int id, string? finish)
         {
             var webtoon = new Contents();
             webtoon.titleId = id;
@@ -130,9 +131,7 @@ namespace MapView.Controllers
 
             webtoon.list = _webToonService.GetItemList(webtoon).OrderByDescending(o => o.no).ToList();
 
-
-            ViewBag.Week = string.IsNullOrEmpty(week) ? "" : week;
-            ViewBag.Genre = string.IsNullOrEmpty(genre) ? "" : genre;
+            ViewBag.Week = webtoon.week;
             ViewBag.Finish = string.IsNullOrEmpty(finish) ? "" : finish;
 
 
@@ -183,7 +182,7 @@ namespace MapView.Controllers
 
 
         
-        public IActionResult Show(int id, int no, string? week, string? genre, string? finish)
+        public IActionResult Show(int id, int no, string? finish)
         {
             var list = _webToonService.GetToonList(new Contents { titleId = id });
             var webtoon = list.Where(w => w.titleId == id).ToList().First();
@@ -196,8 +195,7 @@ namespace MapView.Controllers
             webtoon.list.Add(data);
 
 
-            ViewBag.Week = string.IsNullOrEmpty(week) ? "" : week;
-            ViewBag.Genre = string.IsNullOrEmpty(genre) ? "" : genre;
+            ViewBag.Week = webtoon.week;
             ViewBag.Finish = string.IsNullOrEmpty(finish) ? "" : finish;
 
             return View(webtoon);

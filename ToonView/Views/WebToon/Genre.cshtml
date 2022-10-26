@@ -17,8 +17,12 @@
 
 	function getToonList(val, mode) {
 
-		console.log("====");
-		console.log(val);
+
+		$(".lnb_box").each(function (i, item) {
+			$(this).removeClass("on");
+			if ($(this).text() == val) $(this).addClass("on");
+		});
+
 
 		$.ajax({
 			type: "post",
@@ -27,33 +31,26 @@
 			success: function (data) {
 				console.log(data);
 				var listCnt = 0;
-				
+
+				var html = '<table class="table table-hover">';
 				if (data != null && data.length > 0) {
 
 					listCnt = data.length;
 
-					var html = '<table class="table table-hover">';
-  		
-
 					for (var i = 0; i < data.length; i++) {
 						//listOpt += '<option value="'+ data[i].no + '">' + data[i].name + '</option>'
 						html += '<tr onclick="javascript:goDetail('+ data[i].titleId +');">';
-
 						html += '<td style="width:100px;"><img src="'+ data[i].thumImg +'" alt="" style="height:70px;"/></td>';
 						html += '<td><b>' + data[i].titleName + '</b>&nbsp;&nbsp;&nbsp;<span style="font-size:12px;">' + data[i].artist + '</span><br>' + data[i].star + '<br>' + data[i].lastUpdDate + '</td>';
 						html += '<td></td>';
-
 						html += '</tr>';
-
 					}
-
-					html += '</table>';
 				}
-				console.log(listCnt);
-				$("#genreCnt").text(listCnt);
 
-				$("#weekList").html(html);
+				html += '</table>';
 				
+				$("#genreCnt").text(listCnt);
+				$("#weekList").html(html);
 			}
 		});
 
@@ -61,7 +58,7 @@
 
 
 	function goDetail(id) {
-		location.href = "/webtoon/toon/" + id + "?&genre=@genre";
+		location.href = "/webtoon/toon/" + id;
 	}
 
 
@@ -70,7 +67,9 @@
 </script>
 
 
-<hr />
+<partial name="_pLNBGenre" />
+
+
 
 <div style="margin-top: 8px;">
 	<div sstyle="margin-bottom:15px;">
@@ -81,17 +80,3 @@
 
 </div>
 
-<!--
-<div id="webtoon_desc" class="media">
-  <div class="media-left media-middle">
-    <a href="#">
-      <img class="media-object" src="..." alt="...">
-    </a>
-  </div>
-  <div class="media-body">
-    <h4 class="media-heading">Middle aligned media</h4>
-    ...
-  </div>
-</div>
-
-	-->

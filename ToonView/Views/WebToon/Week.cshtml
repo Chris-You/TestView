@@ -21,32 +21,38 @@
 		//console.log("====");
 		//console.log(val);
 
+		$(".lnb_box").each(function (i, item) {
+			$(this).removeClass("on");
+			if (i == val) $(this).addClass("on");
+		});
+
+
 		$.ajax({
 			type: "post",
 			url: "/webtoon/ToonList" ,
 			data: "mode="+ mode + "&val=" +val, 
 			success: function (data) {
 				//console.log(data);
-				
+				var html = '<table class="table table-hover">';
 				if (data != null && data.length > 0) {
-
-					var html = '<table class="table table-hover">';
-  		
 
 					for (var i = 0; i < data.length; i++) {
 						//listOpt += '<option value="'+ data[i].no + '">' + data[i].name + '</option>'
-						html += '<tr onclick="javascript:goDetail('+ data[i].titleId +');">';
+						html += '<tr onclick="javascript:goDetail(' + data[i].titleId + ');">';
 
-						html += '<td style="width:100px;"><img src="'+ data[i].thumImg +'" alt="" style="height:70px;"/></td>';
+						html += '<td style="width:100px;">';
+						html += '  <div style="overflow:hiddne;position:relative;">';
+						html += '	<img style="display:inline-block;position:relative;" src="' + data[i].thumImg + '" alt="" style="height:70px;"/>';
+						html += '  <span style="position:absolute;top0;left:0;background-color:green;">NEW</span>';
+						html += '  </div>';
+						html += '</td>';
 						html += '<td><b>' + data[i].titleName + '</b>&nbsp;&nbsp;&nbsp;<span style="font-size:12px;">' + data[i].artist + '</span><br>' + data[i].star + '<br>' + data[i].lastUpdDate + '</td>';
 						html += '<td></td>';
 
 						html += '</tr>';
-
 					}
-
-					html += '</table>';
 				}
+				html += '</table>';
 
 				$("#weekList").html(html);
 				
@@ -65,7 +71,9 @@
 
 </script>
 
-<hr />
+
+<partial name="_pLNBWeek" />
+
 <div>
 	<div>
 		<b style="font-size:16px;">@weekName.Substring(0,2) 추천웹툰</b> <span style="font-size:10px;">Today:@DateTime.Now.ToString("yyyy.MM.dd")</span>

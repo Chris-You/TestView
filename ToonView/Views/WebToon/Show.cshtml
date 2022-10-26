@@ -2,10 +2,21 @@
 @{
 	var data = Model.list.First();
 
-    
+    var week = ViewBag.Week;
+	var finish = ViewBag.Finish;
 }
 
 <script type="text/javascript">
+
+    $(function () {
+
+		$(".lnb_box").each(function (i, item) {
+			$(this).removeClass("on");
+			if ($(this).attr("data-week") == "@week") $(this).addClass("on");
+		});
+
+	});
+
 
  jQuery.noConflict()
     function loadImageEvent(element){
@@ -20,6 +31,16 @@
     }
 </script>
 
+
+
+@if (string.IsNullOrEmpty(finish))
+{
+	<partial name="_pLNBWeek" />
+}
+else
+{
+	<div style="height:20px;"></div>
+}
 
 <div style="background-color:;">
 
